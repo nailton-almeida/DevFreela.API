@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DevFreela.Core\DevFreela.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CQRS\Queries\ProjectQueries\GetProjectByUserIdQuery\" />
+    <Folder Include="CQRS\Queries\ProjectQueries\GetProjectByIdQuery\" />
+    <Folder Include="CQRS\Queries\ProjectQueries\GetAllProjectsQuery\" />
+    <Folder Include="CQRS\Queries\ProjectQueries\" />
+    <Folder Include="CQRS\Queries\SkillQueries\GetAllSkillsQuery\" />
+    <Folder Include="CQRS\Queries\UserQueries\GetUsersByIdQuery\" />
+    <Folder Include="CQRS\Queries\UserQueries\GetAllUsersQuery\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.2.0" />
+  </ItemGroup>
+
+</Project>
