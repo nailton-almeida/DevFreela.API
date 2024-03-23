@@ -1,7 +1,4 @@
-﻿
-using DevFreela.Application.InputModels;
-using DevFreela.Application.ViewModels;
-using DevFreela.Core.Entities;
+﻿using DevFreela.Core.Entities;
 using DevFreela.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,12 +12,6 @@ namespace DevFreela.Application.Interfaces
         {
             _dbContext = dbContext;
         }
-
-        //public async Task<IEnumerable<SkillsViewModel>> GetAllAsync()
-        //{
-        //    return await _dbContext.Skills.Select(p => new SkillsViewModel(p.Id, p.Name, p.TypeSkill)).ToListAsync();
-        //}
-
 
         public async Task<List<Skill>> GetAllAsync()
         {

@@ -1,10 +1,8 @@
-﻿using DevFreela.Application.ViewModels;
-using DevFreela.Core.Entities;
+﻿using DevFreela.Core.Entities;
 using DevFreela.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using DevFreela.Application.InputModel;
-using DevFreela.Application.InputModels;
 using DevFreela.Core.Enums;
+using DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand;
 
 
 namespace DevFreela.Infrastructure.Persistence.Repositories
@@ -45,86 +43,64 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             return null;
 
         }
-
-        //public async Task<IEnumerable<ProjectViewModel>> GetBySkill(List<string> skillsNames)
-        //{
-
-
-        //    throw new NotImplementedException();
-        //}
-
-        public async Task<Guid?> CreateProjectAsync(NewProjectInputModel inputModel)
+        public async Task<Guid?> CreateProjectAsync(Project project)
         {
 
-            var clientExist = await _dbContext.Users.AnyAsync(p => p.Id == inputModel.ClientID);
-            var freelancerExist = await _dbContext.Users.AnyAsync(p => p.Id == inputModel.FreelancerID);
+            var clientExist = await _dbContext.Users.AnyAsync(p => p.Id == project.IdClient);
+            var freelancerExist = await _dbContext.Users.AnyAsync(p => p.Id == project.IdFreelancer);
 
             if (clientExist && freelancerExist)
             {
-                var projectInput = new Project(
-
-                //Id = new Guid(),
-                inputModel.Title,
-                inputModel.Description,
-                inputModel.ClientID,
-                inputModel.FreelancerID,
-                inputModel.TotalCost,
-                inputModel.StartedAt,
-                inputModel.FinishedAt);
-
-                _dbContext.Projects.Add(projectInput);
+                _dbContext.Projects.Add(project);
                 _dbContext.SaveChanges();
-                return projectInput.Id;
+                return project.Id;
 
             }
             return null;
 
         }
 
-        public async Task<bool> UpdateProjectAsync(Guid id, UpdateProjectInputModel project)
+        public async Task<Guid?> UpdateProjectAsync(UpdateProjectCommand project)
         {
-            var projectExist = await _dbContext.Projects.AnyAsync(p => p.Id == id);
-            if (projectExist)
+            var projectExist = await _dbContext.Projects.SingleOrDefaultAsync(p => p.Id == project.Id);
+
+            var isValidStatus = (int)projectExist.Status == 4 || (int)projectExist.Status == 5;  
+
+            if (projectExist is not null && isValidStatus)
             {
-                var updateProject = await _dbContext.Projects.SingleOrDefaultAsync(p => p.Id == id);
-                updateProject.UpdateProject(project.Title, project.Description, project.TotalCost, project.StartedAt, project.FinishedAt);
+                projectExist.UpdateProject(project.Title, project.Description, project.TotalCost, project.StartedAt, project.FinishedAt);
                 await _dbContext.SaveChangesAsync();
-                return true;
+                return projectExist.Id;
             }
 
-            return false;
+            return null;
         }
 
 
-        public async Task<bool> PostComentsAsync(Guid id, CreateCommentInputModelcs commentary)
+        public async Task<Guid?> PostComentsAsync(ProjectComment comment)
         {
 
-
-            var projectExist = await _dbContext.Projects.AnyAsync(p => p.Id == id && (p.IdClient == commentary.IdUser || p.IdFreelancer == commentary.IdUser));
-            if (projectExist)
+            var projectExist = await _dbContext.Projects.AnyAsync(p => p.Id == comment.IdProject && (p.IdClient == comment.IdUser || p.IdFreelancer == comment.IdUser));
+           if (projectExist)
             {
-                var newComment = new ProjectComment(commentary.Comment, id, commentary.IdUser);
-
-                _dbContext.ProjectComments.Add(newComment);
+                _dbContext.ProjectComments.Add(comment);
                 _dbContext.SaveChanges();
-                return true;
+                return comment.Id;
             }
-            return false;
+            return null;
 
 
         }
 
         public async Task<bool> ProjectChangeStatusAsync(Guid id, int status)
         {
-            var projectExist = await _dbContext.Projects.AnyAsync(p => p.Id == id);
+            var projectExist = await _dbContext.Projects.SingleOrDefaultAsync(p => p.Id == id);
             var statusCodeIsValid = Enum.IsDefined(typeof(ProjectStatusEnum), status);
 
-            if (statusCodeIsValid && projectExist)
+            if (statusCodeIsValid && projectExist is not null)
             {
-
-                var project = await _dbContext.Projects.SingleOrDefaultAsync(p => p.Id == id);
-                project.UpdateStatus(status);
-                _dbContext.Update(project);
+                projectExist.UpdateStatus(status);
+                _dbContext.Update(projectExist);
                 _dbContext.SaveChanges();
                 return true;
 

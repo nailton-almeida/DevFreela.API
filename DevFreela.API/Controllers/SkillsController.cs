@@ -1,8 +1,5 @@
 ﻿using DevFreela.Application.CQRS.Commands.SkillCommand;
 using DevFreela.Application.CQRS.Queries.SkillQueries;
-using DevFreela.Application.InputModels;
-using DevFreela.Application.Interfaces;
-using DevFreela.Application.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,23 +22,6 @@ namespace DevFreela.API.Controllers
             return Ok(listSkill);
         }
 
-
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<SkillsViewModel>> GetSkillsById(int id)
-        //{
-        //    var skill = await _skillRepository.GetByIdAsync(id);
-        //    if (skill != null)
-        //        return Ok(skill);
-
-        //    return NotFound("Not found skill");
-        //}
-
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<UserSkills>> GetUserBySkills(int id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateSkillCommand command)
         {
@@ -54,7 +34,6 @@ namespace DevFreela.API.Controllers
 
             }
             return NoContent();
-           //return CreatedAtAction(nameof(GetSkillsById), new { id = skillCreate }, skill);
         }
 
 

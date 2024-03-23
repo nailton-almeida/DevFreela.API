@@ -1,7 +1,5 @@
-﻿using DevFreela.Application.ViewModels;
-using DevFreela.Application.InputModel;
-using DevFreela.Application.InputModels;
-using DevFreela.Core.Entities;
+﻿using DevFreela.Core.Entities;
+using DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand;
 
 namespace DevFreela.Application.Interfaces
 {
@@ -10,10 +8,10 @@ namespace DevFreela.Application.Interfaces
         Task<List<Project>> GetAllAsync();
         Task<Project?> GetByIdAsync(Guid id);
         Task<List<Project>?> GetByUserIdAsync(int id);
-        Task<Guid?> CreateProjectAsync(NewProjectInputModel project);
-        Task<bool> UpdateProjectAsync(Guid id, UpdateProjectInputModel updateProject);
+        Task<Guid?> CreateProjectAsync(Project project);
+        Task<Guid?> UpdateProjectAsync(UpdateProjectCommand updateProject);
         Task<bool> ProjectChangeStatusAsync(Guid id, int status);
-        Task<bool> PostComentsAsync(Guid id, CreateCommentInputModelcs commentary);
+        Task<Guid?> PostComentsAsync(ProjectComment comment);
 
     }
 }

@@ -1,9 +1,7 @@
 ﻿using DevFreela.Core.Entities;
 using DevFreela.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using DevFreela.Application.ViewModels;
-using DevFreela.Application.InputModel;
-using DevFreela.Application.CQRS.Commands.UserCommands.CreateUserCommand;
+using DevFreela.Application.CQRS.Commands.UserCommands.EditUserCommand;
 
 namespace DevFreela.Infrastructure.Persistence.Repositories
 {
@@ -47,21 +45,21 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             if (user != null)
             {
                 user.InactiveUser(false);
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
                 return true;
             }
 
             return false;
         }
 
-        public async Task<bool> EditUserAsync(int id, UsersInputModel userinput)
+        public async Task<bool> EditUserAsync(EditUserCommand infoUpdated)
         {
 
-            var editUser = await _dbContext.Users.SingleOrDefaultAsync(p => p.Id == id);
+            var editUser = await _dbContext.Users.SingleOrDefaultAsync(p => p.Id == infoUpdated.Id);
             if (editUser is not null)
             {
-                editUser.UpdateUser(userinput.Fullname, userinput.Email, userinput.Birthday);
-                _dbContext.SaveChanges();
+                editUser.UpdateUser(infoUpdated.Fullname, infoUpdated.Email, infoUpdated.Birthday);
+                await _dbContext.SaveChangesAsync();
                 return true;
             }
 

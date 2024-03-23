@@ -1,6 +1,4 @@
-﻿using DevFreela.Application.InputModels;
-using DevFreela.Application.ViewModels;
-using DevFreela.Core.Entities;
+﻿using DevFreela.Core.Entities;
 
 namespace DevFreela.Application.Interfaces
 {

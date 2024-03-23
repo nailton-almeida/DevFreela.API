@@ -1,7 +1,8 @@
 using DevFreela.Application.CQRS.Commands.UserCommands.CreateUserCommand;
+using DevFreela.Application.CQRS.Commands.UserCommands.EditUserCommand;
+using DevFreela.Application.CQRS.Commands.UserCommands.InactiveUserCommand;
 using DevFreela.Application.CQRS.Queries.UserQueries.GetAllUsersQuery;
 using DevFreela.Application.CQRS.Queries.UserQueries.GetUserByIdQuery;
-using DevFreela.Application.InputModel;
 using DevFreela.Application.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ public class UsersController : ControllerBase
     }
 
 
-    [HttpGet("{id}")]
+    [HttpGet]
     public async Task<IActionResult> GetById(GetUserByIdQuery query)
     {
         var user = await _mediator.Send(query);
@@ -56,11 +57,11 @@ public class UsersController : ControllerBase
 
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, [FromBody] UsersInputModel inputUser)
+    [HttpPut]
+    public async Task<IActionResult> Put(EditUserCommand command)
     {
 
-        var updateUser = await _userRepository.EditUserAsync(id, inputUser);
+        var updateUser = await _mediator.Send(command);
 
         if (updateUser)
         {
@@ -74,27 +75,12 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("inactive/{id}")]
-    public async Task<IActionResult> InactiveUser(int id)
+    public async Task<IActionResult> InactiveUser(InactiveUserCommand command)
     {
-        var userInactive = await _userRepository.InactiveUserAsync(id);
+        var userInactive = await _mediator.Send(command);
         if (userInactive)
             return NoContent();
         return NotFound();
     }
 
-    #region to do later
-    //[HttpPut("login/{id}")]
-    //public async Task<ActionResult> Login(int id, [FromBody] string login)
-    //{
-    //    // return NoContent();
-    //    throw new NotImplementedException();
-    //}
-
-    //[HttpPost("resetPassword/{id}")]
-    //public Task<ActionResult> ResetPassword(int id , string email, string newpassword)
-    //{
-    //    throw new NotImplementedException();
-    //}
-    #endregion
-
-}
+ }

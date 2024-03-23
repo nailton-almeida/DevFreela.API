@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DevFreela.Application.InputModel;
-using DevFreela.Application.InputModels;
 using MediatR;
 using DevFreela.Application.CQRS.Queries.ProjectQueries.GetAllProjectsQuery;
 using DevFreela.Application.CQRS.Queries.ProjectQueries.GetProjectByIdQuery;
 using DevFreela.Application.CQRS.Queries.ProjectQueries.GetProjectByUserIdQuery;
+using DevFreela.Application.CQRS.Commands.ProjectCommands.CreateProjectCommand;
+using DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand;
+using DevFreela.Application.CQRS.Commands.ProjectCommands.CreatePostComentsCommand;
+using DevFreela.Application.CQRS.Commands.ProjectCommands.ProjectChangeStatusCommand;
 
 
 namespace DevFreela.API.Controllers;
@@ -55,21 +57,20 @@ public class ProjectsController : ControllerBase
 
     }
 
-
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] NewProjectInputModel project)
+    public async Task<IActionResult> Post(CreateProjectCommand command)
     {
-        var createProject = await _projectRepository.CreateProjectAsync(project);
+        var createProject = await _mediator.Send(command);
         if (createProject == null)
             BadRequest();
-        return CreatedAtAction(nameof(ProjectById), new { id = createProject }, project);
+        return CreatedAtAction(nameof(ProjectById), new { id = createProject }, command);
     }
 
     [HttpPut("updateDetails/{id}")]
-    public async Task<ActionResult> UpdateProjectDetails([FromRoute] Guid id, [FromBody] UpdateProjectInputModel project)
+    public async Task<ActionResult> UpdateProjectDetails(UpdateProjectCommand command)
     {
-        var projectUpdate = await _projectRepository.UpdateProjectAsync(id, project);
-        if (projectUpdate is false)
+        var projectUpdate = await _mediator.Send(command);
+        if (projectUpdate is null)
         {
             return BadRequest();
         }
@@ -79,19 +80,19 @@ public class ProjectsController : ControllerBase
 
 
     [HttpPost("comments/{id}")]
-    public async Task<IActionResult> PostComent([FromRoute] Guid id, [FromBody] CreateCommentInputModelcs comment)
+    public async Task<IActionResult> PostComent(CreateProjectCommentCommand command)
     {
-        var commentCreated = await _projectRepository.PostComentsAsync(id, comment);
-        if (commentCreated)
+        var commentCreated = await _mediator.Send(command);
+        if (commentCreated is not null)
             return NoContent();
 
         return BadRequest();
     }
 
-    [HttpPut("ChangeStatus/{id}/{status}")]
-    public async Task<ActionResult> ProjectChangeStatus([FromRoute] Guid id, int status)
+    [HttpPut("changeStatus/{id}/{status}")]
+    public async Task<ActionResult> ProjectChangeStatus(ProjectChangeStatusCommand command)
     {
-        var changeStatus = await _projectRepository.ProjectChangeStatusAsync(id, status);
+        var changeStatus = await _mediator.Send(command);
         if (changeStatus)
         {
             return NoContent();
