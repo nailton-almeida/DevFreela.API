@@ -3,6 +3,7 @@ using DevFreela.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using DevFreela.Application.ViewModels;
 using DevFreela.Application.InputModel;
+using DevFreela.Application.CQRS.Commands.UserCommands.CreateUserCommand;
 
 namespace DevFreela.Infrastructure.Persistence.Repositories
 {
@@ -14,50 +15,27 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<List<UsersViewModel>> GetAllAsync()
+        public async Task<List<User>> GetAllAsync()
         {
-            return await _dbContext.Users.AsNoTracking().Select(p => new UsersViewModel(p.Id, p.Fullname, p.Email, p.CreatedAt, p.IsActive)).ToListAsync();
-            
+            return await _dbContext.Users.AsNoTracking().ToListAsync();            
         }
 
-        public async Task<UsersViewModel> GetByIdAsync(int id)
+        public async Task<User?> GetByIdAsync(int id)
         {
-            var userExist = await _dbContext.Users.SingleOrDefaultAsync(p => p.Id == id);
-
-            if (userExist is not null)
-            {
-                var userViewModel = new UsersViewModel(
-
-                     userExist.Id,
-                     userExist.Fullname,
-                     userExist.Email,
-                     userExist.CreatedAt,
-                     userExist.IsActive);
-
-                return userViewModel;
-            }
-
-            return null;
+            return await _dbContext.Users.SingleOrDefaultAsync(p => p.Id == id);
+           
         }
 
 
-        public async Task<int?> CreateUserAsync(UsersInputModel userInput)
+        public async Task<int?> CreateUserAsync(User user)
         {
-            var userExist = await _dbContext.Users.AnyAsync(u => u.Email == userInput.Email);
+            var userExist = await _dbContext.Users.AnyAsync(u => u.Email == user.Email);
             if (!userExist)
             {
-                var userInputModel = new User(               
-                    
-                    userInput.Fullname,
-                    userInput.Email,
-                    userInput.Birthday
-                    
-                   
-             ); 
-                
-                _dbContext.Users.Add(userInputModel);
-                _dbContext.SaveChanges();
-                return userInputModel.Id;
+                               
+                await _dbContext.Users.AddAsync(user);
+                await _dbContext.SaveChangesAsync();
+                return user.Id;
             }
 
             return null;
@@ -93,6 +71,6 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
            
         }
 
-
+         
     }
 }

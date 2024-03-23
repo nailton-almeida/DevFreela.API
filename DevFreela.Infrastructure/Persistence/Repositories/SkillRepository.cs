@@ -15,47 +15,33 @@ namespace DevFreela.Application.Interfaces
         {
             _dbContext = dbContext;
         }
-                
-        public async Task<IEnumerable<SkillsViewModel>> GetAllAsync()
-        {
-            return await _dbContext.Skills.Select(p => new SkillsViewModel(p.Id, p.Name, p.TypeSkill)).ToListAsync();
-        }
 
-        //public async Task<SkillsViewModel> GetByIdAsync(int id)
+        //public async Task<IEnumerable<SkillsViewModel>> GetAllAsync()
         //{
-                        
-        //    var skill = await _dbContext.Skills.SingleOrDefaultAsync(p => p.Id == id);
-        //    if (skill != null) {
-            
-        //    return new SkillsViewModel
-        //       (
-        //        skill.Id,
-        //        skill.Name,
-        //        skill.TypeSkill
-
-        //        );
-
-        //    }
-        //    return null;
+        //    return await _dbContext.Skills.Select(p => new SkillsViewModel(p.Id, p.Name, p.TypeSkill)).ToListAsync();
         //}
 
-        public async Task<int?> CreateAsync(SkillsInputModel skill)
+
+        public async Task<List<Skill>> GetAllAsync()
         {
-            var skillExist = await _dbContext.Skills.FirstOrDefaultAsync(p=> p.Name == skill.Name);
-            
-            if(skillExist == null)
+            return await _dbContext.Skills.AsNoTracking().ToListAsync();//  Select().ToListAsync();
+             
+        }
+
+        public async Task<Skill> CreateAsync(Skill skill)
+        {
+            var skillExist = await _dbContext.Skills.FirstOrDefaultAsync(p => p.Name == skill.Name);
+
+            if (skillExist == null)
             {
-                var newSkill = new Skill(skill.Name, skill.TypeSkills);
-                _dbContext.Skills.Add(newSkill);
-                _dbContext.SaveChanges();
-                return newSkill.Id;
+                await _dbContext.Skills.AddAsync(skill);
+                await _dbContext.SaveChangesAsync();
+                return skill;
 
             }
-
-
             return null;
-                
-              
+
+
         }
     }
 }

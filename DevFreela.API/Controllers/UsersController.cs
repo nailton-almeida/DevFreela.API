@@ -1,6 +1,9 @@
+using DevFreela.Application.CQRS.Commands.UserCommands.CreateUserCommand;
+using DevFreela.Application.CQRS.Queries.UserQueries.GetAllUsersQuery;
+using DevFreela.Application.CQRS.Queries.UserQueries.GetUserByIdQuery;
 using DevFreela.Application.InputModel;
-using DevFreela.Application.Interfaces;
 using DevFreela.Application.ViewModels;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevFreela.Controllers;
@@ -9,11 +12,11 @@ namespace DevFreela.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IMediator _mediator;
 
-    public UsersController(IUserRepository userRepository)
+    public UsersController(IMediator mediator)
     {
-        _userRepository = userRepository;
+        _mediator = mediator;
 
     }
 
@@ -21,36 +24,40 @@ public class UsersController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<UsersViewModel>> Get()
     {
-        return await _userRepository.GetAllAsync();
+        return await _mediator.Send(new GetAllUsersQuery());
+
     }
 
 
     [HttpGet("{id}")]
-    public async Task<ActionResult> GetById(int id)
+    public async Task<IActionResult> GetById(GetUserByIdQuery query)
     {
-        var userExist = await _userRepository.GetByIdAsync(id);
-        if (userExist == null)
-           return NotFound();
+        var user = await _mediator.Send(query);
         
-        return Ok(userExist);
+        if (user == null)
+            return NotFound();
+
+        return Ok(user);
     }
 
     [HttpPost]
-    public async Task<ActionResult<UsersViewModel>> Post([FromBody] UsersInputModel user)
+    public async Task<IActionResult> Post([FromBody] CreateUserCommand user)
     {
-        var createUser = await _userRepository.CreateUserAsync(user);
-        if (createUser is not null)
+        var newUser = await _mediator.Send(user);
+   
+        if (newUser is not null)
         {
 
-            return CreatedAtAction(nameof(GetById), new { id = createUser }, user);
+            return CreatedAtAction(nameof(GetById), new { id = newUser }, user);
         }
+       
         return BadRequest();
-               
+
 
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<UsersViewModel>> Put(int id, [FromBody] UsersInputModel inputUser)
+    public async Task<IActionResult> Put(int id, [FromBody] UsersInputModel inputUser)
     {
 
         var updateUser = await _userRepository.EditUserAsync(id, inputUser);
@@ -67,7 +74,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("inactive/{id}")]
-    public async Task<ActionResult> InactiveUser(int id)
+    public async Task<IActionResult> InactiveUser(int id)
     {
         var userInactive = await _userRepository.InactiveUserAsync(id);
         if (userInactive)

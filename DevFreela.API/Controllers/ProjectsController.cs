@@ -1,8 +1,10 @@
-﻿using DevFreela.Application.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using DevFreela.Application.InputModel;
 using DevFreela.Application.InputModels;
-using DevFreela.Application.Interfaces;
+using MediatR;
+using DevFreela.Application.CQRS.Queries.ProjectQueries.GetAllProjectsQuery;
+using DevFreela.Application.CQRS.Queries.ProjectQueries.GetProjectByIdQuery;
+using DevFreela.Application.CQRS.Queries.ProjectQueries.GetProjectByUserIdQuery;
 
 
 namespace DevFreela.API.Controllers;
@@ -11,41 +13,41 @@ namespace DevFreela.API.Controllers;
 [Route("api/v1/[controller]")]
 public class ProjectsController : ControllerBase
 {
-    private readonly IProjectRepository _projectRepository;
-    
-    public ProjectsController(IProjectRepository projectRepository)
+
+    private readonly IMediator _mediator;
+
+    public ProjectsController(IMediator mediator)
     {
-        _projectRepository = projectRepository;
-       
+        _mediator = mediator;
+
     }
 
     [HttpGet]
-    public async Task<ActionResult<ProjectViewModel>> GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var projectsLists = await _projectRepository.GetAllAsync();
-        return Ok(projectsLists); 
-        
+        var getAllProjects = await _mediator.Send(new GetAllProjectsQuery());
+        return Ok(getAllProjects);
+
     }
-        
+
     [HttpGet("projectById/{id}")]
-    public async Task<ActionResult<ProjectViewModel>> ProjectById([FromRoute] Guid id)
+    public async Task<IActionResult> ProjectById(GetProjectByIdQuery query)
     {
-         
-        var project =  await _projectRepository.GetByIdAsync(id);
+        var project = _mediator.Send(query);
         if (project == null)
         {
             return NotFound();
         }
-      
+
         return Ok(project);
     }
 
 
     [HttpGet("projectByUserId/{id}")]
-    public async Task<ActionResult<ProjectViewModel>> ProjectbyUserId([FromRoute] int id)   
+    public async Task<IActionResult> ProjectbyUserId(GetProjectByUserIdQuery query)
     {
-       var projectsByUser = await _projectRepository.GetByUserIdAsync(id);
-      
+        var projectsByUser = await _mediator.Send(query);
+
         if (projectsByUser == null)
             return NotFound();
 
@@ -55,15 +57,15 @@ public class ProjectsController : ControllerBase
 
 
     [HttpPost]
-    public async Task<ActionResult> Post([FromBody] NewProjectInputModel project)
+    public async Task<IActionResult> Post([FromBody] NewProjectInputModel project)
     {
-       var createProject = await _projectRepository.CreateProjectAsync(project);
+        var createProject = await _projectRepository.CreateProjectAsync(project);
         if (createProject == null)
             BadRequest();
         return CreatedAtAction(nameof(ProjectById), new { id = createProject }, project);
     }
 
-   [HttpPut("updateDetails/{id}")]
+    [HttpPut("updateDetails/{id}")]
     public async Task<ActionResult> UpdateProjectDetails([FromRoute] Guid id, [FromBody] UpdateProjectInputModel project)
     {
         var projectUpdate = await _projectRepository.UpdateProjectAsync(id, project);
@@ -74,30 +76,29 @@ public class ProjectsController : ControllerBase
         return NoContent();
     }
 
-    
+
 
     [HttpPost("comments/{id}")]
-    public async Task<ActionResult> PostComent([FromRoute] Guid id, [FromBody] CreateCommentInputModelcs comment)
+    public async Task<IActionResult> PostComent([FromRoute] Guid id, [FromBody] CreateCommentInputModelcs comment)
     {
-       var commentCreated =  await _projectRepository.PostComentsAsync(id, comment);
+        var commentCreated = await _projectRepository.PostComentsAsync(id, comment);
         if (commentCreated)
             return NoContent();
-            
+
         return BadRequest();
     }
 
     [HttpPut("ChangeStatus/{id}/{status}")]
-    public async Task<ActionResult> ProjectChangeStatus([FromRoute] Guid id,  int status)
+    public async Task<ActionResult> ProjectChangeStatus([FromRoute] Guid id, int status)
     {
         var changeStatus = await _projectRepository.ProjectChangeStatusAsync(id, status);
-        if (changeStatus) 
+        if (changeStatus)
         {
             return NoContent();
         }
         return BadRequest();
 
     }
-     
+
 }
 
- 

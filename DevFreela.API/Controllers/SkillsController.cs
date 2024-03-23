@@ -1,6 +1,9 @@
-﻿using DevFreela.Application.InputModels;
+﻿using DevFreela.Application.CQRS.Commands.SkillCommand;
+using DevFreela.Application.CQRS.Queries.SkillQueries;
+using DevFreela.Application.InputModels;
 using DevFreela.Application.Interfaces;
 using DevFreela.Application.ViewModels;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevFreela.API.Controllers
@@ -9,18 +12,16 @@ namespace DevFreela.API.Controllers
     [Route("api/v1/[controller]")]
     public class SkillsController : ControllerBase
     {
-       private readonly ISkillRepository _skillRepository;
-        public SkillsController(ISkillRepository skillRepository)
+       private readonly IMediator _iMediator;
+        public SkillsController(IMediator iMediator)
         {
-            _skillRepository = skillRepository;
+            _iMediator = iMediator;
         }
 
-
-
         [HttpGet]
-        public async Task<ActionResult<SkillsViewModel>> Get() 
+        public async Task<IActionResult> Get() 
         {
-            var listSkill = await _skillRepository.GetAllAsync();
+            var listSkill = await _iMediator.Send(new GetAllSkillsQuery());
             return Ok(listSkill);
         }
 
@@ -42,9 +43,11 @@ namespace DevFreela.API.Controllers
         //}
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] SkillsInputModel skill)
+        public async Task<IActionResult> Post([FromBody] CreateSkillCommand command)
         {
-            var skillCreate = await _skillRepository.CreateAsync(skill);
+            
+            var skillCreate = await _iMediator.Send(command);
+            
             if (skillCreate == null)
             {
                 return BadRequest();

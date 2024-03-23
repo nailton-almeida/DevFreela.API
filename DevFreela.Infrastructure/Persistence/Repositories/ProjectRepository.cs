@@ -17,51 +17,31 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<ProjectViewModel>> GetAllAsync()
+        public async Task<List<Project>> GetAllAsync()
         {
-            var projects = _dbContext.Projects;
-            var projectViewMode = projects.Select(p => new ProjectViewModel(p.Id, p.Title, p.CreatedAt)).ToList();
-            return projectViewMode;
+            var projects = await _dbContext.Projects.AsNoTracking().ToListAsync();
 
+            return projects;
         }
 
-        public async Task<ProjectDetailsViewModel> GetByIdAsync(Guid id)
+        public async Task<Project?> GetByIdAsync(Guid id)
         {
             var project = await _dbContext.Projects
                 .Include(p => p.Client)
                 .Include(p => p.Freelancer)
-                .SingleOrDefaultAsync(p => p.Id == id);
+                .SingleOrDefaultAsync(p => p.Id == id);   
 
-            if (project == null) return null;
-
-            var projectView = new ProjectDetailsViewModel(
-
-                project.Id,
-                project.Title,
-                project.Description,
-                project.TotalCost,
-                project.StartedAt,
-                project.FinishedAt,
-                project.Client.Fullname,
-                project.Freelancer.Fullname
-
-           );
-
-
-            return projectView;
+            return project;
         }
 
-        public async Task<IEnumerable<ProjectViewModel>> GetByUserIdAsync(int id)
+        public async Task<List<Project>?> GetByUserIdAsync(int id)
         {
             var userExist = await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == id);
 
             if (userExist is not null)
             {
                 var projectByUser = _dbContext.Projects.Where(p => p.IdClient == id);
-                var projectView = await projectByUser.Select(p => new ProjectViewModel(p.Id, p.Title, p.CreatedAt)).ToListAsync();
-                return projectView;
             }
-
             return null;
 
         }
