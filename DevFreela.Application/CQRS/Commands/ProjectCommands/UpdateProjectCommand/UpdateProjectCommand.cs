@@ -6,6 +6,18 @@ namespace DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectComma
 
 public class UpdateProjectCommand : IRequest<Guid?>
 {
+    
+    public UpdateProjectCommand(Guid id, UpdateProjectCommand command)
+    {
+        Id = id;
+        Title = command.Title;
+        Description = command.Description;
+        TotalCost = command.TotalCost;
+        StartedAt = command.StartedAt;
+        FinishedAt = command.FinishedAt;
+        Skills = command.Skills;
+    }
+
     public Guid Id { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }

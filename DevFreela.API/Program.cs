@@ -1,11 +1,11 @@
 using DevFreela.Application.CQRS.Commands.SkillCommand;
 using DevFreela.Application.Interfaces;
+using DevFreela.Application.Validation.Commands;
 using DevFreela.Infrastructure.Persistence;
 using DevFreela.Infrastructure.Persistence.Repositories;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +23,11 @@ builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies(typeof(C
 
 builder.Services.AddDbContext<DevFreelaDbContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("DevFreelaDB")));
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
+
+
 
 var app = builder.Build();
 

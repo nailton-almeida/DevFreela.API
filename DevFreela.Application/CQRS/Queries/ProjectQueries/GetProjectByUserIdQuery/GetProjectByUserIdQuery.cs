@@ -6,5 +6,9 @@ namespace DevFreela.Application.CQRS.Queries.ProjectQueries.GetProjectByUserIdQu
 
 public class GetProjectByUserIdQuery : IRequest<List<ProjectViewModel>>
 {
+    public GetProjectByUserIdQuery(int id)
+    {
+        Id = id;
+    }
     public int Id { get; set; }
 }
