@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using DevFreela.Core.Enums;
 using DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand;
 
-
 namespace DevFreela.Infrastructure.Persistence.Repositories
 {
     public class ProjectRepository : IProjectRepository
@@ -54,7 +53,6 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
                 _dbContext.Projects.Add(project);
                 _dbContext.SaveChanges();
                 return project.Id;
-
             }
             return null;
 

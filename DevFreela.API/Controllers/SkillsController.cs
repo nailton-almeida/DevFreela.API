@@ -3,6 +3,7 @@ using DevFreela.Application.CQRS.Queries.SkillQueries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace DevFreela.API.Controllers
 {
     [ApiController]
