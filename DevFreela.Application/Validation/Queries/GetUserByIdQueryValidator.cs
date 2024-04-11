@@ -5,7 +5,7 @@ using FluentValidation;
 
 namespace DevFreela.Application.Validation.Queries
 {
-    public class GetUserByIdQueryValidator :AbstractValidator<GetUserByIdQuery>
+    public class GetUserByIdQueryValidator : AbstractValidator<GetUserByIdQuery>
     {
         public GetUserByIdQueryValidator()
         {
@@ -13,11 +13,11 @@ namespace DevFreela.Application.Validation.Queries
                 .NotEmpty()
                     .WithMessage("User id is required")
                 .Must(IdValidatorHelper.IdIsInt)
-                  .WithMessage("User id must be an integer");              
+                  .WithMessage("User id must be an integer");
         }
 
-        
+
     }
 
-    
+
 }

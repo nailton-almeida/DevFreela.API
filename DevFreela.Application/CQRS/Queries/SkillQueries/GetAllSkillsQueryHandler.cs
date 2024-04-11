@@ -21,4 +21,4 @@ public class GetAllSkillsQueryHandler : IRequestHandler<GetAllSkillsQuery, List<
 
     }
 }
-   
+

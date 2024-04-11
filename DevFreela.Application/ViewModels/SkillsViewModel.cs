@@ -8,9 +8,9 @@ namespace DevFreela.Application.ViewModels
             Id = id;
             Name = name;
             TypeSkills = typeSkills;
-    
+
         }
-        public int Id  { get; private set; }
+        public int Id { get; private set; }
         public string Name { get; private set; }
         public string TypeSkills { get; private set; }
     }

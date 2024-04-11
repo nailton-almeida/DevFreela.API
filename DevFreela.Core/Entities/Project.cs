@@ -1,6 +1,4 @@
 ﻿using DevFreela.Core.Enums;
-using System.Collections.ObjectModel;
-using System.Data;
 
 namespace DevFreela.Core.Entities;
 
@@ -9,7 +7,7 @@ public class Project
 
     public Project()
     {
-        
+
     }
 
     public Project(string title, string description, int clientID, int freelacerId, decimal totalCost, DateTime startedAt, DateTime finishedAt)
@@ -24,9 +22,9 @@ public class Project
         FinishedAt = finishedAt;
 
         CreatedAt = DateTime.Now;
-        Status= ProjectStatusEnum.Created;
+        Status = ProjectStatusEnum.Created;
         Comments = new List<ProjectComment>();
-       
+
     }
 
     public Guid Id { get; private set; }
@@ -43,16 +41,16 @@ public class Project
     public ProjectStatusEnum Status { get; private set; }
     public List<ProjectComment> Comments { get; private set; }
 
-    public void UpdateProject(string title, string description, decimal totalCost, DateTime startedAt, DateTime finishedAt )
+    public void UpdateProject(string title, string description, decimal totalCost, DateTime startedAt, DateTime finishedAt)
     {
-       Title = title;
-       Description = description;
-       TotalCost = totalCost;
-       StartedAt = startedAt;
-       FinishedAt = finishedAt;
+        Title = title;
+        Description = description;
+        TotalCost = totalCost;
+        StartedAt = startedAt;
+        FinishedAt = finishedAt;
     }
 
-    public void UpdateStatus( int status )
+    public void UpdateStatus(int status)
     {
         Status = (ProjectStatusEnum)status;
     }

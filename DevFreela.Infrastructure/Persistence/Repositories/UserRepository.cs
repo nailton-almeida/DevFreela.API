@@ -1,7 +1,7 @@
-﻿using DevFreela.Core.Entities;
+﻿using DevFreela.Application.CQRS.Commands.UserCommands.EditUserCommand;
 using DevFreela.Application.Interfaces;
+using DevFreela.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using DevFreela.Application.CQRS.Commands.UserCommands.EditUserCommand;
 
 namespace DevFreela.Infrastructure.Persistence.Repositories
 {
@@ -15,13 +15,12 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
 
         public async Task<List<User>> GetAllAsync()
         {
-            return await _dbContext.Users.AsNoTracking().ToListAsync();            
+            return await _dbContext.Users.AsNoTracking().ToListAsync();
         }
 
         public async Task<User?> GetByIdAsync(int id)
         {
             return await _dbContext.Users.SingleOrDefaultAsync(p => p.Id == id);
-           
         }
 
 
@@ -30,7 +29,7 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             var userExist = await _dbContext.Users.AnyAsync(u => u.Email == user.Email);
             if (!userExist)
             {
-                               
+
                 await _dbContext.Users.AddAsync(user);
                 await _dbContext.SaveChangesAsync();
                 return user.Id;
@@ -64,11 +63,15 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             }
 
             return false;
-             
 
-           
+
+
         }
 
-         
+        public async Task<User> LoginUserAsync(string email, string password)
+        {
+            var loginIsValid = await _dbContext.Users.SingleOrDefaultAsync(p => p.Email == email && p.Password == password);
+            return loginIsValid;
+        }
     }
 }

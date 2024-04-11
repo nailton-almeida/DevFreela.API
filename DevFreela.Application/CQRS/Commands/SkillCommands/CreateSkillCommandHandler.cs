@@ -16,13 +16,13 @@ public class CreateSkillCommandHandler : IRequestHandler<CreateSkillCommand, Ski
     {
         var newSkill = new Skill(request.Name, request.TypeSkills);
 
-        var skillCreated =  await _skillRepository.CreateAsync(newSkill);
+        var skillCreated = await _skillRepository.CreateAsync(newSkill);
 
         if (skillCreated is not null)
         {
             return new SkillsViewModel(skillCreated.Id, skillCreated.Name, skillCreated.TypeSkill);
         }
-        
+
         return null;
     }
 }

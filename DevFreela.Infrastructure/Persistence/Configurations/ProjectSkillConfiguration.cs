@@ -1,15 +1,14 @@
 ﻿using DevFreela.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Reflection.Emit;
 
 
 namespace DevFreela.Infrastructure.Persistence.Configurations;
 
 public class ProjectSkillConfiguration : IEntityTypeConfiguration<ProjectSkill>
 {
-     
-     
+
+
 
     public void Configure(EntityTypeBuilder<ProjectSkill> builder)
     {

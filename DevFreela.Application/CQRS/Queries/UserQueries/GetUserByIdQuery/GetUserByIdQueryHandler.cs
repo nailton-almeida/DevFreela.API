@@ -14,7 +14,7 @@ public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UsersVi
     public async Task<UsersViewModel?> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByIdAsync(request.Id);
-        
+
         if (user is not null)
         {
             var userViewModel = new UsersViewModel(

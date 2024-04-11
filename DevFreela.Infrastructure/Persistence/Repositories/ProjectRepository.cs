@@ -1,8 +1,8 @@
-﻿using DevFreela.Core.Entities;
+﻿using DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand;
 using DevFreela.Application.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using DevFreela.Core.Entities;
 using DevFreela.Core.Enums;
-using DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand;
+using Microsoft.EntityFrameworkCore;
 
 namespace DevFreela.Infrastructure.Persistence.Repositories
 {
@@ -26,7 +26,7 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             var project = await _dbContext.Projects
                 .Include(p => p.Client)
                 .Include(p => p.Freelancer)
-                .SingleOrDefaultAsync(p => p.Id == id);   
+                .SingleOrDefaultAsync(p => p.Id == id);
 
             return project;
         }
@@ -62,7 +62,7 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
         {
             var projectExist = await _dbContext.Projects.SingleOrDefaultAsync(p => p.Id == project.Id);
 
-            var isValidStatus = (int)projectExist.Status == 4 || (int)projectExist.Status == 5;  
+            var isValidStatus = (int)projectExist.Status == 4 || (int)projectExist.Status == 5;
 
             if (projectExist is not null && isValidStatus)
             {
@@ -79,7 +79,7 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
         {
 
             var projectExist = await _dbContext.Projects.AnyAsync(p => p.Id == comment.IdProject && (p.IdClient == comment.IdUser || p.IdFreelancer == comment.IdUser));
-           if (projectExist)
+            if (projectExist)
             {
                 _dbContext.ProjectComments.Add(comment);
                 _dbContext.SaveChanges();

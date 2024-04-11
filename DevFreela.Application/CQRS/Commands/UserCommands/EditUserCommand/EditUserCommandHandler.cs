@@ -14,6 +14,6 @@ public class EditUserCommandHandler : IRequestHandler<EditUserCommand, bool>
 
     public async Task<bool> Handle(EditUserCommand request, CancellationToken cancellationToken)
     {
-        return await _userRepository.EditUserAsync(request);        
+        return await _userRepository.EditUserAsync(request);
     }
 }

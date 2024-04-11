@@ -3,11 +3,11 @@ namespace DevFreela.Core.Entities
 {
     public class ProjectSkill
 
-         
+
     {
         //public ProjectSkill()
         //{
-            
+
         //}
 
         public ProjectSkill(Guid idProject, int idSkill)

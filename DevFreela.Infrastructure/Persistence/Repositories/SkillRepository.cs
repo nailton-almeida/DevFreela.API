@@ -16,7 +16,7 @@ namespace DevFreela.Application.Interfaces
         public async Task<List<Skill>> GetAllAsync()
         {
             return await _dbContext.Skills.AsNoTracking().ToListAsync();//  Select().ToListAsync();
-             
+
         }
 
         public async Task<Skill> CreateAsync(Skill skill)
