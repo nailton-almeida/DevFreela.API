@@ -9,6 +9,5 @@ public class GetUserByIdQuery : IRequest<UsersViewModel>
     {
         Id = id;
     }
-
     public int Id { get; set; }
 }

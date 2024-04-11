@@ -10,7 +10,7 @@ namespace DevFreela.Infrastructure.Persistence.Configurations
         {
             builder
                 .HasKey(e => e.Id);
-                 
+
 
             builder
                .HasOne(e => e.Freelancer)

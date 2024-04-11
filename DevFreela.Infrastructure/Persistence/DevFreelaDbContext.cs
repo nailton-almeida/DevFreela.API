@@ -7,9 +7,9 @@ namespace DevFreela.Infrastructure.Persistence
     public class DevFreelaDbContext : DbContext
     {
 
-        public DevFreelaDbContext(DbContextOptions<DevFreelaDbContext> options) : base(options) 
+        public DevFreelaDbContext(DbContextOptions<DevFreelaDbContext> options) : base(options)
         {
-            
+
         }
 
         public DbSet<User> Users { get; set; }

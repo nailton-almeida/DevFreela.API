@@ -1,6 +1,6 @@
 ﻿using DevFreela.Application.CQRS.Queries.ProjectQueries.GetProjectByUserIdQuery;
-using FluentValidation;
 using DevFreela.Application.Validation.Helpers;
+using FluentValidation;
 
 namespace DevFreela.Application.Validation.Queries;
 
@@ -14,5 +14,5 @@ public class GetProjectByUserIdQueryValidator : AbstractValidator<GetProjectByUs
             .Must(IdValidatorHelper.IdIsInt);
     }
 
-   
+
 }

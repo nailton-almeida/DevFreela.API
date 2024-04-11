@@ -5,8 +5,8 @@ namespace DevFreela.Application.CQRS.Commands.UserCommands.InactiveUserCommand;
 
 public class InactiveUserCommandHandler : IRequestHandler<InactiveUserCommand, bool>
 {
-   private readonly IUserRepository _userRepository;
-    
+    private readonly IUserRepository _userRepository;
+
     public InactiveUserCommandHandler(IUserRepository userRepository)
     {
         _userRepository = userRepository;

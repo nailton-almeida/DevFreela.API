@@ -1,17 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MediatR;
+﻿using DevFreela.Application.CQRS.Commands.ProjectCommands.CreatePostComentsCommand;
+using DevFreela.Application.CQRS.Commands.ProjectCommands.CreateProjectCommand;
+using DevFreela.Application.CQRS.Commands.ProjectCommands.ProjectChangeStatusCommand;
+using DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand;
 using DevFreela.Application.CQRS.Queries.ProjectQueries.GetAllProjectsQuery;
 using DevFreela.Application.CQRS.Queries.ProjectQueries.GetProjectByIdQuery;
 using DevFreela.Application.CQRS.Queries.ProjectQueries.GetProjectByUserIdQuery;
-using DevFreela.Application.CQRS.Commands.ProjectCommands.CreateProjectCommand;
-using DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand;
-using DevFreela.Application.CQRS.Commands.ProjectCommands.CreatePostComentsCommand;
-using DevFreela.Application.CQRS.Commands.ProjectCommands.ProjectChangeStatusCommand;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DevFreela.API.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
+[Authorize]
 public class ProjectsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -22,6 +24,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Freelancer")]
     public async Task<IActionResult> GetAll()
     {
         var getAllProjects = await _mediator.Send(new GetAllProjectsQuery());
@@ -29,6 +32,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet("projectById/{id}")]
+    [Authorize(Roles = "Freelancer, Client")]
     public async Task<IActionResult> ProjectById(Guid id)
     {
         var query = new GetProjectByIdQuery(id);
@@ -42,6 +46,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet("projectByUserId/{id}")]
+    [Authorize(Roles = "Client")]
     public async Task<IActionResult> ProjectByUserId(int id)
     {
         var query = new GetProjectByUserIdQuery(id);
@@ -56,6 +61,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Client")]
     public async Task<IActionResult> Post([FromBody] CreateProjectCommand command)
     {
         var createProject = await _mediator.Send(command);
@@ -67,6 +73,7 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPut("updateDetails/{id}")]
+    [Authorize(Roles = "Client")]
     public async Task<IActionResult> UpdateProjectDetails(Guid id, UpdateProjectCommand command)
     {
         var commandSent = new UpdateProjectCommand(id, command);
@@ -79,7 +86,8 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPost("comments")]
-    public async Task<IActionResult> PostComment(CreateProjectCommentCommand command)
+    [Authorize(Roles = "Freelancer, Client")]
+    public async Task<IActionResult> PostComment([FromBody] CreateProjectCommentCommand command)
     {
         var commentCreated = await _mediator.Send(command);
         if (commentCreated == null)
@@ -90,9 +98,10 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpPut("changeStatus/{id}/{status}")]
+    [Authorize(Roles = "Client")]
     public async Task<IActionResult> ProjectChangeStatus(Guid id, int status)
     {
-        
+
         var command = new ProjectChangeStatusCommand(id, status);
         var changeStatus = await _mediator.Send(command);
         if (changeStatus)

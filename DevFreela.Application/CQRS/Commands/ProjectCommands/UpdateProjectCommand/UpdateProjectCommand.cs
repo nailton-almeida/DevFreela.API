@@ -1,12 +1,11 @@
-﻿using DevFreela.Application.ViewModels;
-using DevFreela.Core.Entities;
+﻿using DevFreela.Core.Entities;
 using MediatR;
 
 namespace DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand;
 
 public class UpdateProjectCommand : IRequest<Guid?>
 {
-    
+
     public UpdateProjectCommand(Guid id, UpdateProjectCommand command)
     {
         Id = id;

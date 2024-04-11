@@ -1,5 +1,4 @@
 ﻿using DevFreela.Application.Interfaces;
-using DevFreela.Application.ViewModels;
 using MediatR;
 
 namespace DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand

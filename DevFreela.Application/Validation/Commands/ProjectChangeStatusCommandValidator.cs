@@ -1,5 +1,6 @@
 ﻿using DevFreela.Application.CQRS.Commands.ProjectCommands.ProjectChangeStatusCommand;
 using DevFreela.Application.Validation.Helpers;
+using DevFreela.Core.Enums;
 using FluentValidation;
 
 
@@ -18,7 +19,12 @@ public class ProjectChangeStatusCommandValidator : AbstractValidator<ProjectChan
         RuleFor(projectStatus => projectStatus.Status)
             .NotEmpty()
                 .WithMessage("Status is required")
-            .IsInEnum()
+            .Must(ValueIsEnum)
                 .WithMessage("Status is invalid");
+    }
+
+    public bool ValueIsEnum(int status)
+    {
+        return Enum.IsDefined(typeof(ProjectStatusEnum), status);
     }
 }

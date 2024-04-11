@@ -14,7 +14,7 @@ namespace DevFreela.Application.ViewModels
         public Guid Id { get; private set; }
         public string Title { get; private set; }
         public DateTime CreatedAt { get; private set; }
- 
+
         //public List<Skill> Skills { get; set; }
     }
 }

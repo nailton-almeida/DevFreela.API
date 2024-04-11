@@ -1,6 +1,5 @@
 ﻿using DevFreela.Application.Interfaces;
 using DevFreela.Application.ViewModels;
-using DevFreela.Core.Entities;
 using MediatR;
 
 namespace DevFreela.Application.CQRS.Queries.ProjectQueries.GetAllProjectsQuery

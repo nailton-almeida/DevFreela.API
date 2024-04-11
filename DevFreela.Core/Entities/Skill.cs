@@ -4,8 +4,8 @@ public class Skill
 {
     public Skill(string name, string typeSkill)
     {
-        
-        Name = name; 
+
+        Name = name;
         TypeSkill = typeSkill;
     }
     public int Id { get; private set; }

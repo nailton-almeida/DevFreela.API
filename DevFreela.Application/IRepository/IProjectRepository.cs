@@ -1,5 +1,5 @@
-﻿using DevFreela.Core.Entities;
-using DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand;
+﻿using DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand;
+using DevFreela.Core.Entities;
 
 namespace DevFreela.Application.Interfaces
 {
