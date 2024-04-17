@@ -11,13 +11,15 @@ public class CreateProjectCommentCommandHandler : IRequestHandler<CreateProjectC
     {
         _projectRepository = projectRepository;
     }
-    public async Task<Guid?> Handle(CreateProjectCommentCommand request, CancellationToken cancellationToken)
+    public async Task<Guid?> Handle(CreateProjectCommentCommand command, CancellationToken cancellationToken)
     {
-        var newComment = new ProjectComment(request.Comment, request.IdProject, request.IdUser);
-
-        var createComment = await _projectRepository.PostComentsAsync(newComment);
-
-        if (createComment is not null) return createComment;
+       var projectExist = await _projectRepository.ProjectExistAsync(command.IdProject, command.IdUser);
+ 
+        if (projectExist) 
+        {
+            var newComment = new ProjectComment(command.Comment, command.IdProject, command.IdUser);
+            return await _projectRepository.PostComentsAsync(newComment);
+        }  
 
         return null;
     }

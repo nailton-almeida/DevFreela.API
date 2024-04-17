@@ -11,6 +11,7 @@ namespace DevFreela.Application.Interfaces
         Task<int?> CreateUserAsync(User user);
         Task<bool> EditUserAsync(EditUserCommand editedInfo);
         Task<bool> InactiveUserAsync(int id);
+        Task<bool> UsersExistAndActivateAsync(int userId);
 
     }
 }

@@ -73,5 +73,10 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             var loginIsValid = await _dbContext.Users.SingleOrDefaultAsync(p => p.Email == email && p.Password == password);
             return loginIsValid;
         }
+
+        public async Task<bool> UsersExistAndActivateAsync(int userId, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Users.AnyAsync(p=>p.Id == userId && p.IsActive == true);
+        }
     }
 }

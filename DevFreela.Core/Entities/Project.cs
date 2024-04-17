@@ -10,13 +10,12 @@ public class Project
 
     }
 
-    public Project(string title, string description, int clientID, int freelacerId, decimal totalCost, DateTime startedAt, DateTime finishedAt)
+    public Project(string title, string description, int clientID, decimal totalCost, DateTime startedAt, DateTime finishedAt)
     {
         Id = new Guid();
         Title = title;
         Description = description;
         IdClient = clientID;
-        IdFreelancer = freelacerId;
         TotalCost = totalCost;
         StartedAt = startedAt;
         FinishedAt = finishedAt;
