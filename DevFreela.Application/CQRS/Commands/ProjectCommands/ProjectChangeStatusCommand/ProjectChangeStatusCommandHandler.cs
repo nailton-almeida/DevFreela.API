@@ -14,8 +14,12 @@ public class ProjectChangeStatusCommandHandler : IRequestHandler<ProjectChangeSt
 
     public async Task<bool> Handle(ProjectChangeStatusCommand request, CancellationToken cancellationToken)
     {
-        return await _projectRepository.ProjectChangeStatusAsync(request.IdProject, request.Status);
+        var projectExist = await _projectRepository.ProjectExistAsync(request.IdProject);
+        
+        if(projectExist is not null)
+            return await _projectRepository.ProjectChangeStatusAsync(request.IdProject, request.Status);
 
+        return false;
     }
 }
 

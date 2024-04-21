@@ -12,7 +12,7 @@ namespace DevFreela.Application.Interfaces
         Task<Guid?> UpdateProjectAsync(UpdateProjectCommand updateProject);
         Task<bool> ProjectChangeStatusAsync(Guid id, int status);
         Task<Guid?> PostComentsAsync(ProjectComment comment);
-        Task<bool> ProjectExistAsync(Guid idProject, int idUser);
+        Task<Project?> ProjectExistAsync(Guid idProject);
 
     }
 }

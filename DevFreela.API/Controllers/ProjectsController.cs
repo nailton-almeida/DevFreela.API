@@ -74,10 +74,10 @@ public class ProjectsController : ControllerBase
 
     [HttpPut("updateDetails/{id}")]
     [Authorize(Roles = "Client")]
-    public async Task<IActionResult> UpdateProjectDetails(Guid id, UpdateProjectCommand command)
-    {
-        var commandSent = new UpdateProjectCommand(id, command);
-        var projectUpdate = await _mediator.Send(commandSent);
+    public async Task<IActionResult> UpdateProjectDetails(Guid id, [FromBody] UpdateProjectCommand command)
+    {    //todo check if changes broke the controller
+        //var commandSent = new UpdateProjectCommand(command);
+        var projectUpdate = await _mediator.Send(command);
         if (projectUpdate == null)
         {
             return BadRequest();

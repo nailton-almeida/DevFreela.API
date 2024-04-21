@@ -25,7 +25,7 @@ public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand,
                 command.FinishedAt);
 
         var userExist = await _userRepository.UsersExistAndActivateAsync(command.ClientID);
-        if (userExist)
+        if (userExist is not null)
             return await _projectRepository.CreateProjectAsync(projectInput);
 
         return null;

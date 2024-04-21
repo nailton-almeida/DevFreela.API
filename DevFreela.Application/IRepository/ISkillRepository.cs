@@ -5,7 +5,7 @@ namespace DevFreela.Application.Interfaces
     public interface ISkillRepository
     {
         Task<List<Skill>> GetAllAsync();
-        Task<Skill> CreateAsync(Skill skill);
+        Task<Skill?> CreateAsync(Skill skill);
 
     }
 }

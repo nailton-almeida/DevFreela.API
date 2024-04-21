@@ -2,6 +2,10 @@
 
 public class Skill
 {
+    public Skill()
+    {
+        
+    }
     public Skill(string name, string typeSkill)
     {
 

@@ -19,6 +19,7 @@ namespace DevFreela.UnitTests.Application.Commands.ProjectHander
         [Fact]
         public async Task Handle_Should_ReturnNull_WhenClientDontExist()
         {
+            User user = new();
             //Arrange            
             var command = new CreateProjectCommand
             {
@@ -34,13 +35,13 @@ namespace DevFreela.UnitTests.Application.Commands.ProjectHander
             _userRepositoryMock.Setup(
                 us => us.UsersExistAndActivateAsync(
                     It.IsAny<int>()))
-                .ReturnsAsync(false);
+                .ReturnsAsync((User)null);
 
             var handler = new CreateProjectCommandHandler(_projectRepositoryMock.Object, _userRepositoryMock.Object);
 
             //Act
             var result = await handler.Handle(command, default);
-            
+
             //Assert
             result.Should().BeNull();
         }
@@ -48,7 +49,8 @@ namespace DevFreela.UnitTests.Application.Commands.ProjectHander
         [Fact]
         public async Task Handle_Should_ReturnIdProject_WhenClientExist()
         {
-            //Arrange            
+            //Arrange
+            User user = new();
             var command = new CreateProjectCommand
             {
                 Title = "Title Project UnitTest",
@@ -63,9 +65,9 @@ namespace DevFreela.UnitTests.Application.Commands.ProjectHander
             _userRepositoryMock.Setup(
                 us => us.UsersExistAndActivateAsync(
                     It.IsAny<int>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(user);
 
-            _projectRepositoryMock.Setup(ps=>ps.CreateProjectAsync(
+            _projectRepositoryMock.Setup(ps => ps.CreateProjectAsync(
                 It.IsAny<Project>()))
                     .ReturnsAsync(Guid.NewGuid());
 
