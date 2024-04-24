@@ -10,9 +10,9 @@ using Moq;
 namespace DevFreela.Tests.Application.Commands.ProjectCommandHander
 {
     public class UpdateProjectCommandHandlerTest
-    {   
+    {
         private readonly Mock<IProjectRepository> _projectRepositoryMock;
-       
+
 
         public UpdateProjectCommandHandlerTest()
         {
@@ -77,7 +77,7 @@ namespace DevFreela.Tests.Application.Commands.ProjectCommandHander
 
             //Assert
             result.Should().BeNull();
- 
+
         }
     }
 }

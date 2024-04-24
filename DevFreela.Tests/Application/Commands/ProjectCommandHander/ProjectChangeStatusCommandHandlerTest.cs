@@ -18,7 +18,7 @@ namespace DevFreela.UnitTests.Application.Commands.ProjectHander
         public async Task Handler_ShouldNotChangeStatus_WhenProjectNoExist()
         {
             //Arrange
-           var command = new ProjectChangeStatusCommand(Guid.NewGuid(), 1);
+            var command = new ProjectChangeStatusCommand(Guid.NewGuid(), 1);
 
             _projectRepositoryMock.Setup(p => p.ProjectExistAsync(
                 It.IsAny<Guid>()))
@@ -39,7 +39,7 @@ namespace DevFreela.UnitTests.Application.Commands.ProjectHander
         public async Task Handler_ShouldChangeStatus_WhenProjectExist()
         {
             //Arrange
-            
+
             Project project = new();
 
             var command = new ProjectChangeStatusCommand(Guid.NewGuid(), 1);
@@ -113,5 +113,5 @@ namespace DevFreela.UnitTests.Application.Commands.ProjectHander
             result.Should().BeTrue();
         }
     }
- }
+}
 

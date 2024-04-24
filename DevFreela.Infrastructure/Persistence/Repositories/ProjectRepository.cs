@@ -10,7 +10,7 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
     {
         private readonly DevFreelaDbContext _dbContext;
        
-        public ProjectRepository(DevFreelaDbContext dbContext, IUserRepository userRepository)
+        public ProjectRepository(DevFreelaDbContext dbContext)
         {
             _dbContext = dbContext;
  

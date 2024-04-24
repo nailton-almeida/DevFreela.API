@@ -26,6 +26,21 @@ public class Project
 
     }
 
+    internal Project(Guid id, string title, string description, int idClient, int idFreelancer, decimal totalCost, DateTime startedAt, DateTime finishedAt, User freelancer, User client)
+    {
+        Id = id;
+        Title = title;
+        Description = description;
+        IdClient = idClient;
+        IdFreelancer = idFreelancer;
+        TotalCost = totalCost;
+        StartedAt = startedAt;
+        FinishedAt = finishedAt;
+        Freelancer = freelancer;
+        Client = client;
+
+    }
+
     public Guid Id { get; private set; }
     public string Title { get; private set; }
     public string Description { get; private set; }

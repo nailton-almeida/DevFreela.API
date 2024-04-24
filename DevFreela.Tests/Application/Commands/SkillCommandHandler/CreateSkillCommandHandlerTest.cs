@@ -6,7 +6,7 @@ using FluentAssertions;
 using Moq;
 
 namespace DevFreela.UnitTests.Application.Commands.SkillCommandHandler
-{ 
+{
     public class CreateSkillCommandHandlerTest
     {
         private readonly Mock<ISkillRepository> _skillRepository;

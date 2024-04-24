@@ -65,10 +65,10 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             return false;
         }
 
-        public async Task<User> LoginUserAsync(string email, string password)
+        public async Task<User?> LoginUserAsync(string email, string password)
         {
-            var loginIsValid = await _dbContext.Users.SingleOrDefaultAsync(p => p.Email == email && p.Password == password);
-            return loginIsValid;
+            return await _dbContext.Users.SingleOrDefaultAsync(p => p.Email == email && p.Password == password);
+           
         }
 
         public async Task<User?> UsersExistAndActivateAsync(int userId)
@@ -87,6 +87,11 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
 
             return false;
 
+        }
+
+        public Task<bool> ChangePassword(string newPassword)
+        {
+            throw new NotImplementedException();
         }
     }
 }
