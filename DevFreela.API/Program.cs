@@ -3,6 +3,7 @@ using DevFreela.Application.Interfaces;
 using DevFreela.Application.Validation.Commands;
 using DevFreela.Core.Services;
 using DevFreela.Infrastructure.Auth;
+using DevFreela.Infrastructure.Payment;
 using DevFreela.Infrastructure.Persistence;
 using DevFreela.Infrastructure.Persistence.Repositories;
 using FluentValidation;
@@ -70,6 +71,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ISkillRepository, SkillRepository>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssemblies(typeof(CreateSkillCommand).Assembly); });
