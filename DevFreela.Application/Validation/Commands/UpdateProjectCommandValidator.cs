@@ -45,9 +45,5 @@ public class UpdateProjectCommandValidator : AbstractValidator<UpdateProjectComm
                 .WithMessage("FinishedAt is required")
             .GreaterThanOrEqualTo(project => project.StartedAt)
                 .WithMessage("FinishedAt must be greater than StartedAt");
-
-        //RuleFor(project => project.Skills)
-        //    .NotEmpty()
-        //        .WithMessage("Skills is required");
     }
 }

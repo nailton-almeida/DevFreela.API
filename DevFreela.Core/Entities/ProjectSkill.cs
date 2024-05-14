@@ -5,11 +5,6 @@ namespace DevFreela.Core.Entities
 
 
     {
-        //public ProjectSkill()
-        //{
-
-        //}
-
         public ProjectSkill(Guid idProject, int idSkill)
         {
             IdProject = idProject;

@@ -15,19 +15,19 @@ public class GetProjectByIdQueryhandler : IRequestHandler<GetProjectByIdQuery, P
     {
         var projectSelected = await _repository.GetByIdAsync(request.Id);
 
-        if (projectSelected != null) 
-           return new ProjectDetailsViewModel(
+        if (projectSelected != null)
+            return new ProjectDetailsViewModel(
 
-                       projectSelected.Id,
-                       projectSelected.Title,
-                       projectSelected.Description,
-                       projectSelected.TotalCost,
-                       projectSelected.StartedAt,
-                       projectSelected.FinishedAt,
-                       projectSelected.Client.Fullname,
-                       projectSelected.Freelancer.Fullname
+                        projectSelected.Id,
+                        projectSelected.Title,
+                        projectSelected.Description,
+                        projectSelected.TotalCost,
+                        projectSelected.StartedAt,
+                        projectSelected.FinishedAt,
+                        projectSelected.Client.Fullname,
+                        projectSelected.Freelancer.Fullname
 
-           );
+            );
 
         return null;
     }

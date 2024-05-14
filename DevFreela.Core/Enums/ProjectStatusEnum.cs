@@ -2,10 +2,11 @@
 {
     public enum ProjectStatusEnum
     {
-        Created = 0,
-        InProgress = 1,
-        Paused = 3,
+        Created = 1,
+        InProgress = 2,       
+        PaymentPending = 3,
         Finish = 4,
-        Cancelled = 5,
+        Cancelled = 5
+        
     }
 }

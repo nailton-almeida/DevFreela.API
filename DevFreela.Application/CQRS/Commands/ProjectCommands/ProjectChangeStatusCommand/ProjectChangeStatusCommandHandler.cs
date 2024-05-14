@@ -1,6 +1,5 @@
 ﻿using DevFreela.Application.Interfaces;
 using DevFreela.Core.Enums;
-using DevFreela.Core.Services;
 using MediatR;
 
 namespace DevFreela.Application.CQRS.Commands.ProjectCommands.ProjectChangeStatusCommand;
@@ -8,11 +7,12 @@ namespace DevFreela.Application.CQRS.Commands.ProjectCommands.ProjectChangeStatu
 public class ProjectChangeStatusCommandHandler : IRequestHandler<ProjectChangeStatusCommand, bool>
 {
     private readonly IProjectRepository _projectRepository;
-    private readonly IPaymentService _PaymentService;
+
 
     public ProjectChangeStatusCommandHandler(IProjectRepository projectRepository)
     {
         _projectRepository = projectRepository;
+
     }
 
     public async Task<bool> Handle(ProjectChangeStatusCommand request, CancellationToken cancellationToken)
@@ -21,19 +21,12 @@ public class ProjectChangeStatusCommandHandler : IRequestHandler<ProjectChangeSt
 
         if (projectExist is not null)
         {
-            if (request.Status != (int)ProjectStatusEnum.Finish)
+            if ((int)projectExist.Status != (int)ProjectStatusEnum.Finish && request.Status < (int)projectExist.Status)
             {
                 return await _projectRepository.ProjectChangeStatusAsync(request.IdProject, request.Status);
             }
-
-            else
-            {
-                var paymentIsDone = await _PaymentService.CheckPaymentAsync();
-                var changeStatus = paymentIsDone ? (await _projectRepository.ProjectChangeStatusAsync(request.IdProject, request.Status)) : false;
-                return changeStatus;
-            }
         }
-            
+
         return false;
     }
 }

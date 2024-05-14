@@ -1,6 +1,8 @@
-﻿namespace DevFreela.Core.Services;
+﻿
+using DevFreela.Core.DTO;
 
+namespace DevFreela.Core.Services;
 public interface IPaymentService
 {
-    public Task<bool> CheckPaymentAsync();
+    public Task CheckPaymentAsync(PaymentProjectDTO payment);
 }

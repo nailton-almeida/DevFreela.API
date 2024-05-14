@@ -79,6 +79,7 @@ namespace DevFreela.UnitTests.Application.Commands.ProjectHander
             //Assert
             result.Should().NotBeNull();
             Assert.IsType<Guid>(result);
+            _projectRepositoryMock.Verify(p => p.CreateProjectAsync(It.IsAny<Project>()), Times.Once);
         }
     }
 }
