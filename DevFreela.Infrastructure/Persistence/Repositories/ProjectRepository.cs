@@ -9,9 +9,11 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
     public class ProjectRepository : IProjectRepository
     {
         private readonly DevFreelaDbContext _dbContext;
+       
         public ProjectRepository(DevFreelaDbContext dbContext)
         {
             _dbContext = dbContext;
+ 
         }
 
         public async Task<List<Project>> GetAllAsync()
@@ -33,42 +35,25 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
 
         public async Task<List<Project>?> GetByUserIdAsync(int id)
         {
-            var userExist = await _dbContext.Users.FirstOrDefaultAsync(p => p.Id == id);
-
-            if (userExist is not null)
-            {
-                var projectByUser = _dbContext.Projects.Where(p => p.IdClient == id);
-            }
-            return null;
-
+           return await _dbContext.Projects.Where(p => p.IdClient == id).ToListAsync();
         }
+
         public async Task<Guid?> CreateProjectAsync(Project project)
         {
-
-            var clientExist = await _dbContext.Users.AnyAsync(p => p.Id == project.IdClient);
-            var freelancerExist = await _dbContext.Users.AnyAsync(p => p.Id == project.IdFreelancer);
-
-            if (clientExist && freelancerExist)
-            {
-                _dbContext.Projects.Add(project);
-                _dbContext.SaveChanges();
-                return project.Id;
-            }
-            return null;
-
+          await _dbContext.Projects.AddAsync(project);
+          await _dbContext.SaveChangesAsync();
+          return project.Id;
         }
 
         public async Task<Guid?> UpdateProjectAsync(UpdateProjectCommand project)
         {
-            var projectExist = await _dbContext.Projects.SingleOrDefaultAsync(p => p.Id == project.Id);
+            var projectToUpdate = await _dbContext.Projects.SingleOrDefaultAsync(p => p.Id == project.Id && ((int)p.Status != 4 || (int)p.Status != 5));
 
-            var isValidStatus = (int)projectExist.Status == 4 || (int)projectExist.Status == 5;
-
-            if (projectExist is not null && isValidStatus)
+            if (projectToUpdate is not null)
             {
-                projectExist.UpdateProject(project.Title, project.Description, project.TotalCost, project.StartedAt, project.FinishedAt);
+                projectToUpdate.UpdateProject(project.Title, project.Description, project.TotalCost, project.StartedAt, project.FinishedAt);
                 await _dbContext.SaveChangesAsync();
-                return projectExist.Id;
+                return projectToUpdate.Id;
             }
 
             return null;
@@ -77,17 +62,9 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
 
         public async Task<Guid?> PostComentsAsync(ProjectComment comment)
         {
-
-            var projectExist = await _dbContext.Projects.AnyAsync(p => p.Id == comment.IdProject && (p.IdClient == comment.IdUser || p.IdFreelancer == comment.IdUser));
-            if (projectExist)
-            {
-                _dbContext.ProjectComments.Add(comment);
-                _dbContext.SaveChanges();
+                await _dbContext.ProjectComments.AddAsync(comment);
+                await _dbContext.SaveChangesAsync();
                 return comment.Id;
-            }
-            return null;
-
-
         }
 
         public async Task<bool> ProjectChangeStatusAsync(Guid id, int status)
@@ -101,12 +78,13 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
                 _dbContext.Update(projectExist);
                 _dbContext.SaveChanges();
                 return true;
-
             }
             return false;
-
         }
 
-
+        public async Task<Project?> ProjectExistAsync(Guid idProject)
+        {
+            return await _dbContext.Projects.SingleOrDefaultAsync(p => p.Id == idProject);
+        }
     }
 }

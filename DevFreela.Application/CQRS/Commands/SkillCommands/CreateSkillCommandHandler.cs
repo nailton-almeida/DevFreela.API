@@ -12,9 +12,9 @@ public class CreateSkillCommandHandler : IRequestHandler<CreateSkillCommand, Ski
     {
         _skillRepository = skillRepository;
     }
-    public async Task<SkillsViewModel?> Handle(CreateSkillCommand request, CancellationToken cancellationToken)
+    public async Task<SkillsViewModel?> Handle(CreateSkillCommand command, CancellationToken cancellationToken)
     {
-        var newSkill = new Skill(request.Name, request.TypeSkills);
+        var newSkill = new Skill(command.Name, command.TypeSkills);
 
         var skillCreated = await _skillRepository.CreateAsync(newSkill);
 

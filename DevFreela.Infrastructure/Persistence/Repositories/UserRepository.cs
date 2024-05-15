@@ -63,15 +63,35 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             }
 
             return false;
+        }
 
+        public async Task<User?> LoginUserAsync(string email, string password)
+        {
+            return await _dbContext.Users.SingleOrDefaultAsync(p => p.Email == email && p.Password == password);
+           
+        }
 
+        public async Task<User?> UsersExistAndActivateAsync(int userId)
+        {
+            return await _dbContext.Users.SingleOrDefaultAsync(p => p.Id == userId && p.IsActive == true);
+        }
+
+        public async Task<bool> UsersHasProjectAsync(int userId)
+        {
+            var userExist = await UsersExistAndActivateAsync(userId);
+
+            if (userExist is not null)
+            {
+                return await _dbContext.Projects.AnyAsync(p => (p.IdClient == userId || p.IdFreelancer == userId));
+            }
+
+            return false;
 
         }
 
-        public async Task<User> LoginUserAsync(string email, string password)
+        public Task<bool> ChangePassword(string newPassword)
         {
-            var loginIsValid = await _dbContext.Users.SingleOrDefaultAsync(p => p.Email == email && p.Password == password);
-            return loginIsValid;
+            throw new NotImplementedException();
         }
     }
 }

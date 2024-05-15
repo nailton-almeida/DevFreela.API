@@ -1,5 +1,6 @@
 ﻿using DevFreela.Application.CQRS.Commands.ProjectCommands.CreatePostComentsCommand;
 using DevFreela.Application.CQRS.Commands.ProjectCommands.CreateProjectCommand;
+using DevFreela.Application.CQRS.Commands.ProjectCommands.FinishProjectCommand;
 using DevFreela.Application.CQRS.Commands.ProjectCommands.ProjectChangeStatusCommand;
 using DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectCommand;
 using DevFreela.Application.CQRS.Queries.ProjectQueries.GetAllProjectsQuery;
@@ -74,10 +75,9 @@ public class ProjectsController : ControllerBase
 
     [HttpPut("updateDetails/{id}")]
     [Authorize(Roles = "Client")]
-    public async Task<IActionResult> UpdateProjectDetails(Guid id, UpdateProjectCommand command)
-    {
-        var commandSent = new UpdateProjectCommand(id, command);
-        var projectUpdate = await _mediator.Send(commandSent);
+    public async Task<IActionResult> UpdateProjectDetails(Guid id, [FromBody] UpdateProjectCommand command)
+    {  
+        var projectUpdate = await _mediator.Send(command);
         if (projectUpdate == null)
         {
             return BadRequest();
@@ -109,6 +109,15 @@ public class ProjectsController : ControllerBase
             return NoContent();
         }
         return BadRequest();
+    }
+
+    [HttpPost("finishProject")]
+    [Authorize(Roles = "Client")]
+    public async Task<IActionResult> FinishProject([FromBody] FinishProjectCommand command)
+    {
+        await _mediator.Send(command);
+
+        return Accepted("Project will be finish when payment was processed.");
     }
 }
 

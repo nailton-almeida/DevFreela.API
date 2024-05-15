@@ -13,11 +13,13 @@ namespace DevFreela.Application.CQRS.Commands.ProjectCommands.UpdateProjectComma
         }
         public async Task<Guid?> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
         {
-            Guid? updateProject = await _repository.UpdateProjectAsync(request);
+            var projectExist = await _repository.ProjectExistAsync(request.Id);
 
-            if (updateProject is not null) return updateProject;
-
-            return null;
+            if (projectExist != null)
+            {
+                return await _repository.UpdateProjectAsync(request);
+            }
+             return null;
         }
     }
 }

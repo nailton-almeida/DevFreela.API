@@ -10,13 +10,12 @@ public class Project
 
     }
 
-    public Project(string title, string description, int clientID, int freelacerId, decimal totalCost, DateTime startedAt, DateTime finishedAt)
+    public Project(string title, string description, int clientID, decimal totalCost, DateTime startedAt, DateTime finishedAt)
     {
         Id = new Guid();
         Title = title;
         Description = description;
         IdClient = clientID;
-        IdFreelancer = freelacerId;
         TotalCost = totalCost;
         StartedAt = startedAt;
         FinishedAt = finishedAt;
@@ -24,6 +23,21 @@ public class Project
         CreatedAt = DateTime.Now;
         Status = ProjectStatusEnum.Created;
         Comments = new List<ProjectComment>();
+
+    }
+
+    internal Project(Guid id, string title, string description, int idClient, int idFreelancer, decimal totalCost, DateTime startedAt, DateTime finishedAt, User freelancer, User client)
+    {
+        Id = id;
+        Title = title;
+        Description = description;
+        IdClient = idClient;
+        IdFreelancer = idFreelancer;
+        TotalCost = totalCost;
+        StartedAt = startedAt;
+        FinishedAt = finishedAt;
+        Freelancer = freelancer;
+        Client = client;
 
     }
 

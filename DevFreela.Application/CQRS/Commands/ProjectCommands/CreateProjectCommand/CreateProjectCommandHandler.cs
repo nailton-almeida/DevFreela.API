@@ -6,11 +6,13 @@ namespace DevFreela.Application.CQRS.Commands.ProjectCommands.CreateProjectComma
 
 public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, Guid?>
 {
-    private readonly IProjectRepository _repository;
+    private readonly IProjectRepository _projectRepository;
+    private readonly IUserRepository _userRepository;
 
-    public CreateProjectCommandHandler(IProjectRepository repository)
+    public CreateProjectCommandHandler(IProjectRepository projectRepository, IUserRepository userRepository)
     {
-        _repository = repository;
+        _projectRepository = projectRepository;
+        _userRepository = userRepository;
     }
     public async Task<Guid?> Handle(CreateProjectCommand command, CancellationToken cancellationToken)
     {
@@ -18,15 +20,14 @@ public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand,
                 command.Title,
                 command.Description,
                 command.ClientID,
-                command.FreelancerID,
                 command.TotalCost,
                 command.StartedAt,
                 command.FinishedAt);
 
-        return await _repository.CreateProjectAsync(projectInput);
+        var userExist = await _userRepository.UsersExistAndActivateAsync(command.ClientID);
+        if (userExist is not null)
+            return await _projectRepository.CreateProjectAsync(projectInput);
 
-
-
-
+        return null;
     }
 }

@@ -15,11 +15,10 @@ namespace DevFreela.Application.Interfaces
 
         public async Task<List<Skill>> GetAllAsync()
         {
-            return await _dbContext.Skills.AsNoTracking().ToListAsync();//  Select().ToListAsync();
-
+            return await _dbContext.Skills.AsNoTracking().ToListAsync();
         }
 
-        public async Task<Skill> CreateAsync(Skill skill)
+        public async Task<Skill?> CreateAsync(Skill skill)
         {
             var skillExist = await _dbContext.Skills.FirstOrDefaultAsync(p => p.Name == skill.Name);
 
@@ -31,7 +30,6 @@ namespace DevFreela.Application.Interfaces
 
             }
             return null;
-
 
         }
     }
